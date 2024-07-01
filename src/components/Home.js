@@ -139,6 +139,33 @@ function Home() {
 
       {/* Main content */}
       <div class="w-HomeMainFrame h-screen flex-col justify-start items-start inline-flex absolute" ref={MainRef}>
+        <div class="w-HomeMainFrame px-4 py-3 bg-white justify-between items-center inline-flex">
+            <div class="justify-start items-center gap-4 flex">
+                <div class="w-6 h-6 relative">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="List" clip-path="url(#clip0_11186_9422)">
+                <path id="Vector" d="M3.75 12H20.25" stroke="#3D3A55" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector_2" d="M3.75 6H20.25" stroke="#3D3A55" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector_3" d="M3.75 18H20.25" stroke="#3D3A55" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                <defs>
+                <clipPath id="clip0_11186_9422">
+                <rect width="24" height="24" fill="white"/>
+                </clipPath>
+                </defs>
+                </svg>
+                </div>
+                <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Phần mền chuyển đổi giọng nói/hình ảnh sang văn bản</div>
+            </div>
+            <div class="w-[226px] justify-start items-center gap-4 flex">
+                <a class="h-10 px-3 py-2.5 bg-indigo-50 rounded justify-center items-center gap-2 flex" href="/register">
+                    <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Đăng ký</div>
+                </a>
+                <a class="px-4 py-2.5 bg-blue-600 rounded justify-center items-center gap-2 flex" href="/login">
+                    <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Đăng nhập</div>
+                </a>
+            </div>
+        </div>
         {mainContent}
       </div>
     </>    
