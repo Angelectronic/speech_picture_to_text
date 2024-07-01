@@ -1,4 +1,4 @@
-function Home() {
+function Login() {
   return (
     <div>
       <h1>Ban da dang nhap</h1>
@@ -6,4 +6,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Login;

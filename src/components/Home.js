@@ -1,12 +1,52 @@
-import { Button } from "antd"
 import { useNavigate } from "react-router-dom"
+import React from "react"
+import Trangchu from "./Trangchu"
+import LichSu from "./LichSu"
+import CauHinh from "./CauHinh"
 
 function Home() {
   const navigate = useNavigate()
+  const [mainContent, setMainContent] = React.useState(<Trangchu />)
 
-  const onClick = () => {
-    console.log('Click');
-    navigate('/login');
+  var TrangChuRef = React.createRef()
+  var LichSuRef = React.createRef()
+  var CauHinhRef = React.createRef()
+  var MainRef = React.createRef()
+
+  const onClickTrangChu = () => {
+    if (TrangChuRef.current && LichSuRef.current && CauHinhRef.current) {
+      TrangChuRef.current.classList.add('bg-indigo-500')
+      LichSuRef.current.classList.remove('bg-indigo-500')
+      CauHinhRef.current.classList.remove('bg-indigo-500')
+    }
+
+    if (MainRef.current) {
+      setMainContent(<Trangchu />)
+    }
+  }
+
+  const onClickLichSu = () => {
+    if (LichSuRef.current && LichSuRef.current && CauHinhRef.current) {
+      LichSuRef.current.classList.add('bg-indigo-500')
+      TrangChuRef.current.classList.remove('bg-indigo-500')
+      CauHinhRef.current.classList.remove('bg-indigo-500')
+    }
+
+    if (MainRef.current) {
+      setMainContent(<LichSu />)
+    }
+  }
+
+  const onClickCauHinh = () => {
+    if (CauHinhRef.current && LichSuRef.current && CauHinhRef.current) {
+      CauHinhRef.current.classList.add('bg-indigo-500')
+      LichSuRef.current.classList.remove('bg-indigo-500')
+      TrangChuRef.current.classList.remove('bg-indigo-500')
+    }
+
+    if (MainRef.current) {
+      setMainContent(<CauHinh />)
+    }
   }
 
   return (
@@ -37,31 +77,60 @@ function Home() {
         </div>
 
         <div class="self-stretch grow shrink basis-0 flex-col justify-start items-center gap-2 flex">
-          <div class="self-stretch px-3 py-2.5 bg-indigo-500 rounded-lg justify-start items-center gap-3 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-2 flex">
+          <div class="self-stretch px-3 py-2.5 bg-indigo-500 rounded-lg justify-start items-center gap-3 inline-flex" ref={TrangChuRef}>
+            <button class="grow shrink basis-0 h-6 justify-start items-center gap-2 flex" onClick={onClickTrangChu}>
               <div class="w-6 h-6 relative">
-
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="House" clip-path="url(#clip0_11258_10600)">
+              <path id="Vector" d="M14.25 19.4999V14.9999C14.25 14.801 14.171 14.6102 14.0303 14.4695C13.8897 14.3289 13.6989 14.2499 13.5 14.2499H10.5C10.3011 14.2499 10.1103 14.3289 9.96967 14.4695C9.82902 14.6102 9.75 14.801 9.75 14.9999V19.4999C9.75 19.6988 9.67098 19.8895 9.53033 20.0302C9.38968 20.1708 9.19891 20.2499 9 20.2499H4.5C4.30109 20.2499 4.11032 20.1708 3.96967 20.0302C3.82902 19.8895 3.75 19.6988 3.75 19.4999V10.8317C3.75001 10.7272 3.77187 10.6239 3.81416 10.5283C3.85646 10.4327 3.91827 10.347 3.99562 10.2767L11.4956 3.19487C11.6337 3.06917 11.8137 2.99951 12.0005 2.99951C12.1872 2.99951 12.3672 3.06917 12.5053 3.19487L20.0053 10.2767C20.0827 10.347 20.1445 10.4327 20.1868 10.5283C20.2291 10.6239 20.2509 10.7272 20.2509 10.8317V19.4999C20.2509 19.6988 20.1719 19.8895 20.0313 20.0302C19.8906 20.1708 19.6998 20.2499 19.5009 20.2499H15C14.8011 20.2499 14.6103 20.1708 14.4697 20.0302C14.329 19.8895 14.25 19.6988 14.25 19.4999Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_11258_10600">
+              <rect width="24" height="24" fill="white"/>
+              </clipPath>
+              </defs>
+              </svg>
               </div>
               <div class="text-white text-sm font-medium font-['Open Sans'] leading-tight">Trang chủ</div>
-            </div>
+            </button>
           </div>
 
-          <div class="self-stretch px-3 py-2.5 rounded-lg justify-start items-center gap-3 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-2 flex">
+          <div class="self-stretch px-3 py-2.5 rounded-lg justify-start items-center gap-3 inline-flex" ref={LichSuRef}>
+            <button class="grow shrink basis-0 h-6 justify-start items-center gap-2 flex" onClick={onClickLichSu}>
               <div class="w-6 h-6 relative">
-
-              </div>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="Clock" clip-path="url(#clip0_11258_10607)">
+              <path id="Vector" d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path id="Vector_2" d="M12 6.75V12H17.25" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_11258_10607">
+              <rect width="24" height="24" fill="white"/>
+              </clipPath>
+              </defs>
+              </svg>
+              </div> 
               <div class="text-white text-sm font-medium font-['Open Sans'] leading-tight">Lịch sử</div>
-            </div>
+            </button>
           </div>
 
-          <div class="self-stretch px-3 py-2.5 rounded-lg justify-start items-center gap-3 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-2 flex">
+          <div class="self-stretch px-3 py-2.5 rounded-lg justify-start items-center gap-3 inline-flex" ref={CauHinhRef}>
+            <button class="grow shrink basis-0 h-6 justify-start items-center gap-2 flex" onClick={onClickCauHinh}>
               <div class="w-6 h-6 relative">
-
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="GearSix" clip-path="url(#clip0_11258_10617)">
+                <path id="Vector" d="M12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25C9.92893 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92893 15.75 12 15.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path id="Vector_2" d="M12.1906 19.3228C12.0649 19.3228 11.9384 19.3228 11.8156 19.3228L8.81088 21C7.64118 20.6065 6.55626 19.9959 5.61306 19.2L5.60181 15.825C5.53525 15.72 5.47244 15.6141 5.41431 15.5053L2.4265 13.8038C2.19117 12.6134 2.19117 11.3885 2.4265 10.1981L5.4115 8.50125C5.47244 8.39344 5.53525 8.28656 5.599 8.18156L5.614 4.80656C6.55634 4.00842 7.64099 3.39548 8.81088 3L11.8109 4.67719C11.9365 4.67719 12.0631 4.67719 12.1859 4.67719L15.1859 3C16.3556 3.39346 17.4405 4.00414 18.3837 4.8L18.3949 8.175C18.4615 8.28 18.5243 8.38594 18.5824 8.49469L21.5684 10.1953C21.8037 11.3857 21.8037 12.6106 21.5684 13.8009L18.5834 15.4978C18.5224 15.6056 18.4596 15.7125 18.3959 15.8175L18.3809 19.1925C17.4392 19.9908 16.3552 20.604 15.1859 21L12.1906 19.3228Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+                <defs>
+                <clipPath id="clip0_11258_10617">
+                <rect width="24" height="24" fill="white"/>
+                </clipPath>
+                </defs>
+                </svg>
               </div>
               <div class="text-white text-sm font-medium font-['Open Sans'] leading-tight">Cấu hình</div>
-            </div>
+            </button>
             <div class="w-4 h-4 relative"></div>
           </div>
 
@@ -69,86 +138,8 @@ function Home() {
       </div>
 
       {/* Main content */}
-      <div class="w-[1670px] h-screen flex-col justify-start items-start inline-flex absolute">
-        <div class="w-[1670px] px-4 py-3 bg-white justify-between items-center inline-flex">
-          <div class="justify-start items-center gap-4 flex">
-            <div class="w-6 h-6 relative"></div>
-            <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Phần mền chuyển đổi giọng nói/hình ảnh sang văn bản</div>
-          </div>
-          <div class="w-[226px] justify-start items-center gap-4 flex">
-            <div class="h-10 px-3 py-2.5 bg-indigo-50 rounded justify-center items-center gap-2 flex">
-              <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Đăng ký</div>
-            </div>
-            <div class="px-4 py-2.5 bg-blue-600 rounded justify-center items-center gap-2 flex">
-              <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Đăng nhập</div>
-            </div>
-          </div>
-        </div>
-        <div class="w-[1670px] grow shrink basis-0 px-5 py-4 flex-col justify-start items-start gap-4 flex">
-          <div class="self-stretch text-zinc-800 text-2xl font-bold font-['Open Sans'] leading-9">Trang chủ</div>
-          <div class="self-stretch grow shrink basis-0 rounded-bl-lg rounded-br-lg justify-start items-start gap-4 inline-flex">
-            <div class="self-stretch rounded-xl flex-col justify-start items-start inline-flex">
-              <div class="self-stretch p-4 bg-white border-b border-gray-200 justify-start items-center gap-4 inline-flex">
-                <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Loại chuyển đổi</div>
-              </div>
-              <div class="w-[400px] grow shrink basis-0 px-4 bg-white flex-col justify-start items-start gap-4 flex">
-                <div class="self-stretch h-[52px] justify-start items-start inline-flex">
-                  <div class="grow shrink basis-0 h-[52px] px-5 py-4 bg-white border-b-2 border-blue-600 justify-center items-center gap-4 flex">
-                    <div class="justify-start items-center gap-2 flex">
-                      <div class="text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Chuyển đổi từ giọng nói</div>
-                    </div>
-                  </div>
-                  <div class="grow shrink basis-0 h-[52px] px-5 py-4 bg-white border-b border-zinc-300 justify-center items-center gap-4 flex">
-                    <div class="justify-start items-center gap-2 flex">
-                      <div class="text-zinc-600 text-sm font-medium font-['Open Sans'] leading-tight">Chuyển đổi từ ảnh</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="self-stretch h-[383px] flex-col justify-start items-start gap-4 flex">
-                  <div class="self-stretch h-[195px] p-4 rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
-                    <div class="p-3 bg-green-100 rounded-xl justify-center items-center gap-2 inline-flex">
-                      <div class="w-8 h-8 relative"></div>
-                    </div>
-                    <div class="flex-col justify-center items-center gap-[3px] flex">
-                      <div class="text-zinc-800 text-sm font-semibold font-['Open Sans'] leading-tight">Tải lên file âm thanh hoặc kéo thả</div>
-                      <div class="text-zinc-500 text-sm font-normal font-['Open Sans'] leading-tight">Định dạng hỗ trợ: mp3, wav</div>
-                    </div>
-                    <div class="px-2 py-1.5 bg-indigo-50 rounded justify-center items-center gap-2 inline-flex">
-                      <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Chọn file</div>
-                    </div>
-                  </div>
-                  <div class="self-stretch h-[172px] p-4 bg-white rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
-                    <div class="p-3 bg-rose-50 rounded-xl flex-col justify-center items-center gap-2 flex">
-                      <div class="w-8 h-8 relative"></div>
-                    </div>
-                    <div class="text-zinc-800 text-sm font-semibold font-['Open Sans'] leading-tight">Chuyển đổi từ ghi âm trực tiếp</div>
-                    <div class="px-2 py-1.5 bg-indigo-50 rounded justify-center items-center gap-2 inline-flex">
-                      <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Ghi âm</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="self-stretch px-4 py-3.5 bg-indigo-300 rounded justify-center items-center gap-2 inline-flex">
-                  <div class="w-5 h-5 relative"></div>
-                  <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Chuyển đổi</div>
-                </div>
-              </div>
-            </div>
-            <div class="grow shrink basis-0 self-stretch bg-white rounded-lg flex-col justify-start items-start inline-flex">
-              <div class="self-stretch p-4 bg-white border-b border-gray-200 justify-start items-center gap-4 inline-flex">
-                <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Kết quả chuyển đổi</div>
-              </div>
-              <div class="self-stretch grow shrink basis-0 p-4 flex-col justify-start items-start gap-2 flex">
-                <div class="self-stretch grow shrink basis-0 pl-4 pr-1 pt-3 pb-1 bg-white rounded border border-zinc-300 flex-col justify-between items-end flex">
-                  <div class="self-stretch text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight">Kết quả chuyển đổi</div>
-                  <div class="w-[5px] h-[5px] relative">
-                    <div class="w-[7.07px] h-[0px] left-[5px] top-0 absolute origin-top-left rotate-[135deg] border border-zinc-400"></div>
-                    <div class="w-[4.24px] h-[0px] left-[5px] top-[2px] absolute origin-top-left rotate-[135deg] border border-zinc-400"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="w-HomeMainFrame h-screen flex-col justify-start items-start inline-flex absolute" ref={MainRef}>
+        {mainContent}
       </div>
     </>    
   );
