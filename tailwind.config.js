@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       width: {
         'HomeMainFrame': 'calc(100vw - 250px)',
+        'HomeMainFrameMobile': 'calc(100vw - 70px)',
       },
     },
   },

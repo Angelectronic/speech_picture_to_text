@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Login() {
+function Register() {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => {
@@ -113,7 +113,7 @@ function Login() {
     <div class="w-5/12 h-screen py-12 bg-white flex-col justify-center items-center inline-flex">
         <div class="self-stretch h-[390px] px-12 flex-col justify-center items-center gap-12 flex">
             <div class="h-[390px] w-3/4 flex-col justify-start items-start gap-8 flex">
-                <div class="text-blue-600 text-4xl font-bold font-['Open Sans'] leading-[54px]">Đăng nhập</div>
+                <div class="text-blue-600 text-4xl font-bold font-['Open Sans'] leading-[54px]">Đăng Ký</div>
                 <div class="self-stretch h-[168px] flex-col justify-start items-start gap-4 flex">
                     <div class="self-stretch h-[76px] flex-col justify-start items-start gap-2 flex">
                         <div class="justify-start items-start inline-flex">
@@ -168,4 +168,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
