@@ -2,10 +2,56 @@ import React, { useState } from "react";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [checkEmptyEmail, setCheckEmptyEmail] = useState(true);
+  const [checkEmptyPassword, setCheckEmptyPassword] = useState(true);    
+
+  var email = React.createRef();
+  var password = React.createRef();
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const login = () => {
+    if(email.current.value.trim() === '') {
+      setCheckEmptyEmail(false);
+    } else {
+      setCheckEmptyEmail(true);
+    }
+
+    if(password.current.value.trim() === '') {
+      setCheckEmptyPassword(false);
+    } else {
+      setCheckEmptyPassword(true);
+    }
+    if(email.current.value.trim() === '' || password.current.value.trim() === '') {
+      return;
+    }
+
+    var body = {
+      "username": email.current.value,
+      "password": password.current.value
+    }
+    fetch('https://restful-booker.herokuapp.com/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify(body),
+      mode: 'no-cors'
+    }).then(response => {
+      console.log(response);
+      if(response.status === 200) {
+        alert('Login success');
+      } else {
+        alert('Login failed');
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+    });
+    
+  }
 
   return (
     <>
@@ -120,16 +166,17 @@ function Login() {
                             <div class="text-slate-900 text-sm font-normal font-['Open Sans'] leading-tight">Email</div>
                             
                         </div>
-                        <div class="self-stretch px-4 py-3.5 bg-white rounded border border-zinc-300 justify-start items-center gap-2.5 inline-flex">
-                            <input type="text" class="grow shrink basis-0 text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight" placeholder="Nhập địa chỉ email"/>
+                        <div class={checkEmptyEmail ? "self-stretch px-4 py-3.5 bg-white rounded border border-zinc-300 justify-start items-center gap-2.5 inline-flex" : "self-stretch px-4 py-3.5 bg-white rounded border border-rose-500 justify-start items-center gap-2.5 inline-flex"}>
+
+                            <input type="text" class="grow shrink basis-0 text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight" placeholder="Nhập địa chỉ email" ref={email}/>
                         </div>
                     </div>
                     <div class="self-stretch h-[76px] flex-col justify-start items-start gap-2 flex">
                         <div class="justify-start items-start inline-flex">
                             <div class="text-slate-900 text-sm font-normal font-['Open Sans'] leading-tight">Mật khẩu</div>
                         </div>
-                        <div class="self-stretch px-4 py-3.5 rounded border border-zinc-300 justify-start items-center gap-2.5 inline-flex">
-                            <input type={showPassword ? "text" : "password"} class="grow shrink basis-0 text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight" placeholder="Nhập mật khẩu"/>
+                        <div class={checkEmptyPassword ? "self-stretch px-4 py-3.5 rounded border border-zinc-300 justify-start items-center gap-2.5 inline-flex" : "self-stretch px-4 py-3.5 rounded border border-rose-500 justify-start items-center gap-2.5 inline-flex"}>
+                            <input type={showPassword ? "text" : "password"} class="grow shrink basis-0 text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight" placeholder="Nhập mật khẩu" ref={password}/>
                             <div class="w-5 h-5 relative">
                               <button onClick={togglePassword} class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full justify-center items-center inline-flex">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -153,9 +200,9 @@ function Login() {
                         </div>
                     </div>
                 </div>
-                <div class="self-stretch px-4 py-3.5 bg-blue-600 rounded justify-center items-center gap-2 inline-flex">
+                <button class="self-stretch px-4 py-3.5 bg-blue-600 rounded justify-center items-center gap-2 inline-flex" onClick={login}>
                     <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Đăng nhập</div>
-                </div>
+                </button>
                 <div class="justify-start items-start gap-2 inline-flex">
                     <div class="text-zinc-600 text-base font-normal font-['Open Sans'] leading-normal">Bạn chưa có tài khoản?</div>
                     <a href='/register' class="text-blue-600 text-base font-semibold font-['Open Sans'] leading-normal">Đăng ký</a>
