@@ -33,10 +33,10 @@ function Trangchu() {
                         <div class="self-stretch h-[383px] flex-col justify-start items-start gap-4 flex">
                             {audio ? <HaveAudioUI state={audio} setState={setAudio} /> : <NonFileUI onStateChange={handleFileUpload} />}
                         </div>
-                        <div class="self-stretch px-4 py-3.5 bg-indigo-300 rounded justify-center items-center gap-2 inline-flex">
+                        <button class="self-stretch px-4 py-3.5 bg-blue-600 rounded justify-center items-center gap-2 inline-flex disabled:opacity-50" disabled>
                             <div class="w-5 h-5 relative"></div>
                             <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Chuyển đổi</div>
-                        </div>
+                        </button>
                     </div>
                 </div>
                     <div class="grow shrink basis-0 self-stretch bg-white rounded-lg flex-col justify-start items-start inline-flex">
