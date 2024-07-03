@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom"
 import React from "react"
 import Trangchu from "./Trangchu"
 import LichSu from "./LichSu"
 import CauHinh from "./CauHinh"
 
 function Home() {
-  const navigate = useNavigate()
   const [mainContent, setMainContent] = React.useState(<Trangchu />)
 
   var TrangChuRef = React.createRef()

@@ -2,15 +2,80 @@ import React from "react";
 
 function NonFileUI({ onStateChange }) {
     const fileInputRef = React.useRef(null);
-
+    const [record, setRecord] = React.useState(false);
+    const [recordUI, setRecordUI] = React.useState(false);
+    const mediaRecorderRef = React.useRef(null);
+    
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
-        onStateChange(file);
+        const audioFile = document.createElement("audio");
+    
+        audioFile.addEventListener('loadedmetadata', () => {
+            onStateChange(audioFile);
+        });
+    
+        audioFile.src = URL.createObjectURL(file);
     };
 
     const handleButtonUpload = () => {
         fileInputRef.current.click();
     };
+
+    React.useEffect(() => {
+        const startRecording = async () => {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const mediaRecorder = new MediaRecorder(stream);
+          mediaRecorderRef.current = mediaRecorder;
+          const chunks = [];
+    
+          mediaRecorder.ondataavailable = (e) => {
+            chunks.push(e.data);
+          };
+    
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'audio/wav' });
+            const audioURL = URL.createObjectURL(blob);
+            const audio = document.createElement("audio");
+            audio.src = audioURL;
+    
+            audio.addEventListener('loadedmetadata', () => {
+              // Handle Infinity duration because of Chrome bug
+              if (audio.duration === Infinity || isNaN(audio.duration)) {
+                audio.currentTime = 1e101;
+                audio.addEventListener("timeupdate", () => {
+                  audio.currentTime = 0;
+                  onStateChange(audio);
+                }, { once: true });
+              } else {
+                onStateChange(audio);
+              }
+            });
+          };
+    
+          mediaRecorder.start();
+          setRecord(true);
+        };
+    
+        if (record) {
+          startRecording();
+        } else if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+          mediaRecorderRef.current.stop();
+        }
+    
+        return () => {
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop();
+          }
+        };
+      }, [record, onStateChange]);
+
+    const toggleRecord = () => {
+        setRecord(!record);
+    };
+
+    const openRecordUI = () => {
+        setRecordUI(true);
+    }
 
   return (
     <><div class="self-stretch h-[195px] p-4 rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
@@ -47,11 +112,56 @@ function NonFileUI({ onStateChange }) {
                   </div>
               </div>
               <div class="text-zinc-800 text-sm font-semibold font-['Open Sans'] leading-tight">Chuyển đổi từ ghi âm trực tiếp</div>
-              <div class="px-2 py-1.5 bg-indigo-50 rounded justify-center items-center gap-2 inline-flex">
+              <button class="px-2 py-1.5 bg-indigo-50 rounded justify-center items-center gap-2 inline-flex" onClick={openRecordUI}>
                   <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Ghi âm</div>
-              </div>
+              </button>
+          </div>
+          {recordUI ? <>
+
+
+          <div class="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+          <div class="fixed inset-0 flex items-center justify-center z-50">
+              <div class="w-[616px] h-[368px] p-6 bg-white rounded-2xl flex-col justify-center items-center gap-6 inline-flex">
+                <div class="self-stretch justify-start items-center gap-1.5 inline-flex">
+                    <div class="grow shrink basis-0 text-slate-900 text-xl font-semibold font-['Open Sans'] leading-[30px]">Ghi âm trực tiếp</div>
+                    <div class="p-[7px] bg-rose-50 rounded-[15px] justify-center items-center gap-2.5 flex">
+                        <div class="w-4 h-4 relative"></div>
+                    </div>
+                </div>
+                <div class="self-stretch h-[266px] flex-col justify-center items-center gap-2 flex">
+                    <div class="self-stretch h-[68px] flex-col justify-start items-start gap-2 flex">
+                        <div class="justify-start items-start inline-flex">
+                            <div class="text-slate-900 text-sm font-normal font-['Open Sans'] leading-tight">Nguồn âm thanh</div>
+                        </div>
+                        <div class="self-stretch px-4 py-2.5 bg-white rounded border border-zinc-400 justify-between items-center inline-flex">
+                            <div class="grow shrink basis-0 text-zinc-800 text-sm font-normal font-['Open Sans'] leading-tight">Micro 01</div>
+                            <div class="justify-center items-center gap-2 flex">
+                                <div class="w-4 h-4 relative"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="self-stretch h-[190px] py-8 rounded border border-zinc-300 flex-col justify-start items-center gap-6 flex">
+                        <div class="text-zinc-600 text-4xl font-bold font-['Open Sans'] leading-[54px]">00 : 00 : 00</div>
+                        <div class="self-stretch justify-center items-center gap-4 inline-flex">
+                            <button class="px-4 py-3 bg-white rounded-lg border border-zinc-300 justify-center items-center gap-2 flex" onClick={toggleRecord}>
+                                <div class="w-6 h-6 justify-center items-center gap-2 flex">
+                                    <div class="w-4 h-4 bg-rose-500 rounded-full"></div>
+                                </div>
+                                <div class="text-zinc-800 text-sm font-normal font-['Open Sans'] leading-tight">{record ? 'Kết thúc' : 'Bắt đầu'}</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
           </div></>
+
+
+
+          : null}
+          
+          </>
   );
 }
+
 
 export default NonFileUI;
