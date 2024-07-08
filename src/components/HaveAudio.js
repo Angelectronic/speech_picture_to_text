@@ -91,7 +91,7 @@ function HaveAudioUI({ state, setState }) {
                     </button>
                 </div>
             </div>
-        </div>    
+        </div>
         </>
   );
 }

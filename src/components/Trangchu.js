@@ -4,9 +4,17 @@ import HaveAudioUI from "./HaveAudio"
 
 function Trangchu() {
     const [audio, setAudio] = React.useState(null);
+    const [resultText, setResultText] = React.useState("Kết quả chuyển đổi");
 
     const handleFileUpload = (newState) => {
         setAudio(newState);
+    }
+
+    const handleConvert = () => {
+        // Call API here
+        if (audio) {
+            setResultText("Chuyển đổi thành công!");
+        }
     }
 
     return (
@@ -33,7 +41,7 @@ function Trangchu() {
                         <div class="self-stretch h-[383px] flex-col justify-start items-start gap-4 flex">
                             {audio ? <HaveAudioUI state={audio} setState={setAudio} /> : <NonFileUI onStateChange={handleFileUpload} />}
                         </div>
-                        <button class="self-stretch px-4 py-3.5 bg-blue-600 rounded justify-center items-center gap-2 inline-flex disabled:opacity-50" disabled>
+                        <button class="self-stretch px-4 py-3.5 bg-blue-600 rounded justify-center items-center gap-2 inline-flex disabled:opacity-50" disabled={!audio} onClick={handleConvert}>
                             <div class="w-5 h-5 relative"></div>
                             <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Chuyển đổi</div>
                         </button>
@@ -45,7 +53,7 @@ function Trangchu() {
                         </div>
                         <div class="self-stretch grow shrink basis-0 p-4 flex-col justify-start items-start gap-2 flex">
                             <div class="self-stretch grow shrink basis-0 pl-4 pr-1 pt-3 pb-1 bg-white rounded border border-zinc-300 flex-col justify-between items-end flex">
-                                <div class="self-stretch text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight">Kết quả chuyển đổi</div>
+                                <div class="self-stretch text-zinc-400 text-sm font-normal font-['Open Sans'] leading-tight">{resultText}</div>
                                 <div class="w-[5px] h-[5px] relative">
                                     <div class="w-[7.07px] h-[0px] left-[5px] top-0 absolute origin-top-left rotate-[135deg] border border-zinc-400"></div>
                                     <div class="w-[4.24px] h-[0px] left-[5px] top-[2px] absolute origin-top-left rotate-[135deg] border border-zinc-400"></div>

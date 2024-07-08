@@ -33,14 +33,14 @@ function Login() {
       "username": email.current.value,
       "password": password.current.value
     }
-    fetch('https://restful-booker.herokuapp.com/auth', {
+    fetch('https://dummyjson.com/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        // 'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(body),
-      mode: 'no-cors'
+      // mode: 'no-cors'
     }).then(response => {
       console.log(response);
       if(response.status === 200) {
