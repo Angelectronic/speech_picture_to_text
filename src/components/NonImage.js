@@ -36,10 +36,12 @@ function NonImgUI({ onStateChange }) {
     const props = {
         name: 'file',
         action: 'http://localhost:8000/getImg',
+        accept: ".jpg,.png,.jpeg",
         onChange(info) {
         const { status } = info.file;
         if (status !== 'uploading') {
             console.log(info.file, info.fileList);
+            
         }
         if (status === 'done') {
             message.success(`${info.file.name} file uploaded successfully.`);
@@ -91,7 +93,7 @@ function NonImgUI({ onStateChange }) {
         <>
         <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
         <div class="w-full flex-col justify-center items-center gap-4 flex">
-            <button class="justify-center items-center gap-1 flex" onClick={() => setImageUrl(null)}>
+            <button class="justify-center items-center gap-1 flex" onClick={() => { setImageUrl(null); onStateChange(null); }}>
                 <div class="w-5 h-5 relative">
                     <Trash />
                 </div>
@@ -110,7 +112,7 @@ function NonImgUI({ onStateChange }) {
                 <p className="ant-upload-hint">Định dạng hỗ trợ: jpg, png...</p>
             </Dragger>
         </div>
-        <div class="self-stretch h-[172px] p-4 bg-white rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
+        <div class="self-stretch h-[172px] p-4 bg-white rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex mt-6">
             <div class="p-3 bg-rose-50 rounded-xl flex-col justify-center items-center gap-2 flex">
                 <div class="w-8 h-8 relative">
                     <Camera />

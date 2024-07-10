@@ -78,6 +78,21 @@ function Trangchu() {
                     setColorText("text-red-600");
                 }
             );  
+        } else if (img && curTab === "2") {
+            fetch("http://localhost:8000/convertImg", {
+                method: "GET",
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                setResultText(data.text);
+
+                // Change color of text to black
+                setColorText("text-black");
+            }).catch((error) => { // handle the error of calling API
+                console.error("Error:", error);
+                setResultText("Có lỗi xảy ra khi chuyển đổi");
+                setColorText("text-red-600");
+            });
         }
     }
 
