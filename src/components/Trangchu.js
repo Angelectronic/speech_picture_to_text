@@ -13,7 +13,31 @@ function Trangchu() {
     const handleConvert = () => {
         // Call API here
         if (audio) {
-            setResultText("Chuyển đổi thành công!");
+            //upload audio to server
+            const formData = new FormData();
+
+            // Convert HTMLAudioElement to wav file
+            fetch(audio.src)
+                .then(response => response.blob())
+                .then(blob => {
+                    console.log("file_size: ", blob.size); 
+                    formData.append("file", blob, "audio.wav");
+
+                    fetch("http://localhost:8000/convertAudio", {
+                        method: "POST",
+                        body: formData
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        setResultText(data.text);
+                    }).catch((error) => { // handle the error of calling API
+                        console.error("Error:", error);
+                    });
+                })
+                .catch(error => { // handle the error of converting audio to wav file
+                    console.error("Error:", error);
+                }
+            );  
         }
     }
 
