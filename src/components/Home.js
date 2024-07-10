@@ -153,7 +153,7 @@ function Home() {
                 </defs>
                 </svg>
                 </div>
-                <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Phần mền chuyển đổi giọng nói/hình ảnh sang văn bản</div>
+                <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Phần mềm chuyển đổi giọng nói/hình ảnh sang văn bản</div>
             </div>
             <div class="w-[226px] justify-start items-center gap-4 flex">
                 <a class="h-10 px-3 py-2.5 bg-indigo-50 rounded justify-center items-center gap-2 flex" href="/register">

@@ -150,7 +150,7 @@ function NonFileUI({ onStateChange }) {
           {recordUI ? <>
 
 
-          <div class="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+          <div class="fixed inset-0 bg-black bg-opacity-50 z-50" id="overlay"></div>
           <div class="fixed inset-0 flex items-center justify-center z-50">
               <div class="w-[616px] h-[368px] p-6 bg-white rounded-2xl flex-col justify-center items-center gap-6 inline-flex">
                 <div class="self-stretch justify-start items-center gap-1.5 inline-flex">
