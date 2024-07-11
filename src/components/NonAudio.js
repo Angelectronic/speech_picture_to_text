@@ -3,6 +3,8 @@ import { ReactComponent as X } from "../resources/X.svg";
 import { ReactComponent as Pause2 } from "../resources/Pause2.svg";
 import { ReactComponent as FileAudio2 } from "../resources/FileAudio2.svg";
 import { ReactComponent as Microphone } from "../resources/Microphone.svg";
+import { MediaRecorder, register } from 'extendable-media-recorder';
+import { connect } from 'extendable-media-recorder-wav-encoder';
 
 function NonFileUI({ onStateChange }) {
     const [record, setRecord] = React.useState(false);
@@ -42,8 +44,9 @@ function NonFileUI({ onStateChange }) {
 
     React.useEffect(() => {
         const startRecording = async () => {
+          await register(await connect());
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          const mediaRecorder = new MediaRecorder(stream);
+          const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' });
           mediaRecorderRef.current = mediaRecorder;
           const chunks = [];
     
@@ -51,9 +54,10 @@ function NonFileUI({ onStateChange }) {
             chunks.push(e.data);
           };
     
-          mediaRecorder.onstop = () => {
+          mediaRecorder.onstop = async () => {
             const blob = new Blob(chunks, { type: 'audio/wav' });
-            const audioURL = URL.createObjectURL(blob);
+
+            const audioURL = URL.createObjectURL(blob);  
             const audio = document.createElement("audio");
             audio.src = audioURL;
     
@@ -122,7 +126,8 @@ function NonFileUI({ onStateChange }) {
     };
 
   return (
-    <><div class="self-stretch h-[195px] p-4 rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
+    <>
+    <div class="self-stretch h-[195px] p-4 rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
           <div class="p-3 bg-green-100 rounded-xl justify-center items-center gap-2 inline-flex">
               <div class="w-8 h-8 relative">
                 <FileAudio2 />
