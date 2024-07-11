@@ -16,6 +16,19 @@ const getBase64 = (img, callback) => {
     reader.readAsDataURL(img);
 };
 
+
+function imgUrlToBlob(url) {
+    const arr = url.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while(n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
+
     
   
 function NonImgUI({ onStateChange }) {
@@ -27,6 +40,23 @@ function NonImgUI({ onStateChange }) {
 
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
+        // post imageSrc to server asynchronously
+        const formData = new FormData();
+        const blob = imgUrlToBlob(imageSrc);
+        formData.append('file', blob, 'img.jpg');
+
+        fetch('http://localhost:8000/getImg', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Success:", data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
         setImageUrl(imageSrc);
         setWebcam(false);
         onStateChange(imageSrc);
