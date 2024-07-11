@@ -4,7 +4,10 @@ import LichSu from "./LichSu"
 import CauHinh from "./CauHinh"
 
 function Home() {
+  const username = localStorage.getItem('username')
+
   const [mainContent, setMainContent] = React.useState(<Trangchu />)
+  const [loggedIn, setLoggedIn] = React.useState(username ? true : false)
 
   var TrangChuRef = React.createRef()
   var LichSuRef = React.createRef()
@@ -45,6 +48,12 @@ function Home() {
     if (MainRef.current) {
       setMainContent(<CauHinh />)
     }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('username')
+    // localStorage.removeItem('token')
+    setLoggedIn(false)
   }
 
   return (
@@ -155,6 +164,19 @@ function Home() {
                 </div>
                 <div class="text-zinc-800 text-lg font-semibold font-['Open Sans'] leading-7">Phần mềm chuyển đổi giọng nói/hình ảnh sang văn bản</div>
             </div>
+            {loggedIn ?
+            <div class="w-[226px] justify-start items-center gap-4 flex">
+                <button class="h-10 px-3 py-2.5 bg-indigo-50 rounded justify-center items-center gap-2 flex" onClick={handleLogout}>
+                    <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Đăng xuất</div>
+                </button>
+
+                <div class="w-10 h-10 relative">
+                    <div class="w-10 h-10 rounded-full bg-blue-600 justify-center items-center flex">
+                        <div class="text-white text-sm font-medium font-['Open Sans'] leading-tight">{username}</div>
+                    </div>
+                </div>
+            </div>
+            :
             <div class="w-[226px] justify-start items-center gap-4 flex">
                 <a class="h-10 px-3 py-2.5 bg-indigo-50 rounded justify-center items-center gap-2 flex" href="/register">
                     <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Đăng ký</div>
@@ -163,6 +185,7 @@ function Home() {
                     <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Đăng nhập</div>
                 </a>
             </div>
+            }
         </div>
         {mainContent}
       </div>

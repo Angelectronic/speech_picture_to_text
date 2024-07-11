@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate  } from "react-router-dom";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,8 +12,10 @@ function Login() {
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
+  const navigator = useNavigate();
 
-  const login = () => {
+  const login = () => {  
+
     if(email.current.value.trim() === '') {
       setCheckEmptyEmail(false);
     } else {
@@ -44,7 +47,9 @@ function Login() {
     }).then(response => {
       console.log(response);
       if(response.status === 200) {
-        alert('Login success');
+        // redirect to home page with username
+        localStorage.setItem('username', email.current.value);
+        navigator('/');
       } else {
         alert('Login failed');
       }
