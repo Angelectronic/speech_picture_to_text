@@ -36,7 +36,7 @@ function Login() {
       "username": email.current.value,
       "password": password.current.value
     }
-    fetch('https://dummyjson.com/auth/login', {
+    fetch('http://localhost:8000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,8 @@ function Login() {
       },
       body: JSON.stringify(body),
       // mode: 'no-cors'
-    }).then(response => {
+    }).then(async response => {
+      const data = await response.json();
       console.log(response);
       if(response.status === 200) {
         // redirect to home page with username
