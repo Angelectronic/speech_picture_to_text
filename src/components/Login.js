@@ -45,7 +45,7 @@ function Login() {
       body: JSON.stringify(body),
       // mode: 'no-cors'
     }).then(async response => {
-      const data = await response.json();
+      // const data = await response.json();
       console.log(response);
       if(response.status === 200) {
         // redirect to home page with username
