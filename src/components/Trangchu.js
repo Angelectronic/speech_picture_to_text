@@ -3,6 +3,7 @@ import NonFileUI from "./NonAudio"
 import HaveAudioUI from "./HaveAudio"
 import NonImgUI from "./NonImage";
 import { Tabs } from 'antd';
+import { Space, Switch } from 'antd';
 
 function Trangchu() {
     const [audio, setAudio] = React.useState(null);
@@ -10,9 +11,10 @@ function Trangchu() {
     const [curTab, setCurTab] = React.useState("1");
     const [resultText, setResultText] = React.useState("Kết quả chuyển đổi");
     const [colorText, setColorText] = React.useState("text-zinc-400");
+    const [languageEnglish, setLanguageEnglish] = React.useState(true);
 
-    const handleAudioUpload = (newState) => {
-        setAudio(newState);
+    const handleAudioUpload = (audioFile) => {
+        setAudio(audioFile);
     }
 
     const handleImgUpload = (newState) => {
@@ -55,6 +57,7 @@ function Trangchu() {
                 .then(blob => {
                     console.log("file_size: ", blob.size); 
                     formData.append("file", blob, "audio.wav");
+                    formData.append("language", languageEnglish ? "en-US" : "vi-VN");
 
                     fetch("http://localhost:8000/convertAudio", {
                         method: "POST",
@@ -96,6 +99,11 @@ function Trangchu() {
         }
     }
 
+    // Language switch
+    const onChangesLanguage = (checked) => {
+        setLanguageEnglish(checked);
+    }
+
     return (
         <><div class="w-HomeMainFrame grow shrink basis-0 px-5 py-4 flex-col justify-start items-start gap-4 flex">
             <div class="self-stretch text-zinc-800 text-2xl font-bold font-['Open Sans'] leading-9">Trang chủ</div>
@@ -108,7 +116,11 @@ function Trangchu() {
                         <div class="w-full h-full">
                             <Tabs defaultActiveKey="1" items={convertType} centered onChange={handleTabChange} />
                         </div>
-
+                        {curTab === "1" ? <Space direction="vertical">
+                            <Switch checkedChildren="English" unCheckedChildren="Tiếng Việt" defaultChecked onChange={onChangesLanguage} />
+                        </Space> : null}
+                        
+                        
                         <button class="self-stretch px-4 py-3.5 bg-blue-600 rounded justify-center items-center gap-2 inline-flex disabled:opacity-50" onClick={handleConvert} disabled={!(audio && curTab === "1") && !(img && curTab === "2")}>
                             <div class="w-5 h-5 relative"></div>
                             <div class="text-center text-white text-sm font-medium font-['Open Sans'] leading-tight">Chuyển đổi</div>

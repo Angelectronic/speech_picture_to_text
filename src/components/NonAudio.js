@@ -42,45 +42,50 @@ function NonFileUI({ onStateChange }) {
         fileInputRef.current.click();
     };
 
+    // eslint-disable-next-line no-unused-vars
+    const register_init = async () => {
+        await register(await connect());
+    }
+
     React.useEffect(() => {
         const startRecording = async () => {
-          await register(await connect());
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' });
-          mediaRecorderRef.current = mediaRecorder;
-          const chunks = [];
-    
-          mediaRecorder.ondataavailable = (e) => {
-            chunks.push(e.data);
-          };
-    
-          mediaRecorder.onstop = async () => {
-            const blob = new Blob(chunks, { type: 'audio/wav' });
+            // await register(await connect());
 
-            const audioURL = URL.createObjectURL(blob);  
-            const audio = document.createElement("audio");
-            audio.src = audioURL;
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' });
+            mediaRecorderRef.current = mediaRecorder;
+            const chunks = [];
     
-            audio.addEventListener('loadedmetadata', () => {
-              // Handle Infinity duration because of Chrome bug
-              if (audio.duration === Infinity || isNaN(audio.duration)) {
-                audio.currentTime = 1e101;
-                audio.addEventListener("timeupdate", () => {
-                  audio.currentTime = 0;
+            mediaRecorder.ondataavailable = (e) => {
+                chunks.push(e.data);
+            };
+    
+            mediaRecorder.onstop = async () => {
+                const blob = new Blob(chunks, { type: 'audio/wav' });
 
-                  clearInterval(intervalRef.current);
-                  onStateChange(audio);
-                }, { once: true });
-              } else {
-                onStateChange(audio);
-              }
-            });
-          };
-    
-          mediaRecorder.start();
-          setRecord(true);
+                const audioURL = URL.createObjectURL(blob);  
+                const audio = document.createElement("audio");
+                audio.src = audioURL;
+        
+                audio.addEventListener('loadedmetadata', () => {
+                // Handle Infinity duration because of Chrome bug
+                if (audio.duration === Infinity || isNaN(audio.duration)) {
+                    audio.currentTime = 1e101;
+                    audio.addEventListener("timeupdate", () => {
+                    audio.currentTime = 0;
+
+                    clearInterval(intervalRef.current);
+                    onStateChange(audio);
+                    }, { once: true });
+                } else {
+                    onStateChange(audio);
+                }
+                });
+            };
+            mediaRecorder.start();
+            setRecord(true);
         };
-    
+        
         if (record) {
           startRecording();
         } else if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
@@ -88,9 +93,9 @@ function NonFileUI({ onStateChange }) {
         }
     
         return () => {
-          if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-            mediaRecorderRef.current.stop();
-          }
+            if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+                mediaRecorderRef.current.stop();
+            }
         };
       }, [record, onStateChange]);
 
@@ -125,6 +130,8 @@ function NonFileUI({ onStateChange }) {
         isPausedRef.current = !isPausedRef.current;
     };
 
+    
+
   return (
     <>
     <div class="self-stretch h-[195px] p-4 rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex">
@@ -151,7 +158,9 @@ function NonFileUI({ onStateChange }) {
               <button class="px-2 py-1.5 bg-indigo-50 rounded justify-center items-center gap-2 inline-flex" onClick={() => setRecordUI(true)}>
                   <div class="text-center text-blue-600 text-sm font-medium font-['Open Sans'] leading-tight">Ghi âm</div>
               </button>
+              
           </div>
+          
           {recordUI ? <>
 
 
