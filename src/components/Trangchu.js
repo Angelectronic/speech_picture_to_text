@@ -133,7 +133,9 @@ function Trangchu() {
                         </div>
                         <div class="self-stretch grow shrink basis-0 p-4 flex-col justify-start items-start gap-2 flex">
                             <div class="self-stretch grow shrink basis-0 pl-4 pr-1 pt-3 pb-1 bg-white rounded border border-zinc-300 flex-col justify-between items-end flex">
-                                <div class={`self-stretch ${colorText} text-sm font-normal font-['Open Sans'] leading-tight`}>{resultText}</div>
+                                <div class={`self-stretch ${colorText} text-sm font-normal font-['Open Sans'] leading-tight`}>
+                                    <p dangerouslySetInnerHTML={{__html: resultText.replace(/\n/g, "<br />")}}></p>
+                                </div>
                                 <div class="w-[5px] h-[5px] relative">
                                     <div class="w-[7.07px] h-[0px] left-[5px] top-0 absolute origin-top-left rotate-[135deg] border border-zinc-400"></div>
                                     <div class="w-[4.24px] h-[0px] left-[5px] top-[2px] absolute origin-top-left rotate-[135deg] border border-zinc-400"></div>

@@ -121,7 +121,7 @@ function NonImgUI({ onStateChange }) {
         { 
         imageUrl ? 
         <>
-        <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+        <img src={imageUrl} alt="avatar" class="w-full max-h-full object-contain" />
         <div class="w-full flex-col justify-center items-center gap-4 flex">
             <button class="justify-center items-center gap-1 flex" onClick={() => { setImageUrl(null); onStateChange(null); }}>
                 <div class="w-5 h-5 relative">
