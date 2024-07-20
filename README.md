@@ -5,6 +5,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Setting up a React Environment
 **Download Node.js**: https://nodejs.org/en/download/package-manager
 
+## Download poppler
+**Download Poppler**: https://github.com/oschwartz10612/poppler-windows/releases/
+ You will then have to add the bin/ folder to PATH or use
+ poppler_path = r”C:\path\to\poppler-xx\bin” as an argument in *convert_from_path*.
+
+ ```
+ images_pdf = convert_from_path(pdf_path, poppler_path="C:/games/poppler-24.02.0/Library/bin")
+ ```
+
+
+
 ## Available Scripts
 
 In the project directory, you can run:
