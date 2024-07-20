@@ -6,7 +6,7 @@ import { ReactComponent as Camera } from '../resources/Camera.svg';
 import { ReactComponent as Camera2 } from '../resources/Camera2.svg';
 import { ReactComponent as X } from '../resources/X.svg';
 import Webcam from "react-webcam";
-
+const PDFJS = require("pdfjs-dist/webpack");
 
 const { Dragger } = Upload;
 
@@ -14,7 +14,7 @@ const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
-};
+};  
 
 
 function imgUrlToBlob(url) {
@@ -30,7 +30,6 @@ function imgUrlToBlob(url) {
 }
 
     
-  
 function NonImgUI({ onStateChange }) {
 
     const [imageUrl, setImageUrl] = React.useState(null);
@@ -38,12 +37,38 @@ function NonImgUI({ onStateChange }) {
 
     const webcamRef = React.useRef(null);
 
+
+    React.useEffect(() => {
+        // Loại bỏ các giá trị trùng lặp trong imageUrl dựa trên url
+        if (imageUrl) {
+            const uniqueUrlsMap = {};
+            const uniqueUrls = [];
+            
+            imageUrl.forEach(item => {
+                if (!uniqueUrlsMap[item.url]) {
+                    uniqueUrlsMap[item.url] = true;
+                    uniqueUrls.push(item);
+                }
+            });
+            
+            if (uniqueUrls.length !== imageUrl.length) {
+                setImageUrl(uniqueUrls);
+                onStateChange(uniqueUrls);
+            } else {
+                onStateChange(imageUrl);
+            }
+        } else {
+            onStateChange(null);
+        }
+    }, [imageUrl, onStateChange]);
+
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
         // post imageSrc to server asynchronously
         const formData = new FormData();
         const blob = imgUrlToBlob(imageSrc);
-        formData.append('file', blob, 'img.jpg');
+        const name = 'capture.png';
+        formData.append('file', blob, name);
 
         fetch('http://localhost:8000/getImg', {
             method: 'POST',
@@ -57,30 +82,54 @@ function NonImgUI({ onStateChange }) {
             console.error('Error:', error);
         });
 
-        setImageUrl(imageSrc);
+        setImageUrl([{url: imageSrc, name: name}]);
         setWebcam(false);
-        onStateChange(imageSrc);
     
-    }, [webcamRef, onStateChange]);
+    }, []);
 
     const props = {
         name: 'file',
         action: 'http://localhost:8000/getImg',
-        accept: ".jpg,.png,.jpeg",
+        accept: ".jpg,.png,.jpeg,.pdf",
         onChange(info) {
         const { status } = info.file;
         if (status !== 'uploading') {
             console.log(info.file, info.fileList);
-            
         }
         if (status === 'done') {
             message.success(`${info.file.name} file uploaded successfully.`);
 
-            getBase64(info.file.originFileObj, imageUrl => {
-                setImageUrl(imageUrl);
-                onStateChange(imageUrl);
-            });
+            const fileList = info.fileList;
 
+            fileList.forEach(file => {
+                if (file.originFileObj.type === 'application/pdf') {
+                    getBase64(file.originFileObj, async url => {
+                        const pdf = await PDFJS.getDocument(url).promise;
+                        const pages = [];
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const viewport = page.getViewport({ scale: 1 });
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            const renderContext = {
+                                canvasContext: context,
+                                viewport: viewport
+                            };
+                            const renderTask = page.render(renderContext);
+                            await renderTask.promise;
+                            const pageData = canvas.toDataURL('image/png');
+                            pages.push(pageData);
+                        }
+                        setImageUrl(prev => prev ? [...prev, ...pages.map((page, index) => ({'url': page, 'name': file.name}))] : pages.map((page, index) => ({'url': page, 'name': file.name})));
+                    });
+                } else {
+                    getBase64(file.originFileObj, url => {
+                        setImageUrl(prev => prev ? [...prev, {'url': url, 'name': file.name}] : [{'url': url, 'name': file.name}]);
+                    }); 
+                }
+            });
         } else if (status === 'error') {
             message.error(`${info.file.name} file upload failed.`);
         }
@@ -88,30 +137,20 @@ function NonImgUI({ onStateChange }) {
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
-        multiple: false,
-        previewFile(file) {
-            // show preview
-            getBase64(file, imageUrl => {
-                setImageUrl(imageUrl);
-            });
-            return new Promise(resolve => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const img = new Image();
-                    img.src = reader.result;
-                    img.onload = () => {
-                        resolve({
-                            url: reader.result,
-                            width: img.width,
-                            height: img.height,
-                        });
-                    };
-                };
-            });
-        }
-        
+        multiple: true
     };
+
+    const removeImage = (index) => {
+        if (imageUrl.length === 1 && index === 0) {
+            setImageUrl(null);
+            onStateChange(null);
+            return;
+        }
+
+        const newImageUrl = imageUrl.filter((url, idx) => idx !== index);
+        setImageUrl(newImageUrl);
+        onStateChange(newImageUrl);
+    }
 
   return (
     <>
@@ -119,16 +158,23 @@ function NonImgUI({ onStateChange }) {
         
 
         { 
-        imageUrl ? 
+        imageUrl ?
         <>
-        <img src={imageUrl} alt="avatar" class="w-full max-h-full object-contain" />
-        <div class="w-full flex-col justify-center items-center gap-4 flex">
-            <button class="justify-center items-center gap-1 flex" onClick={() => { setImageUrl(null); onStateChange(null); }}>
-                <div class="w-5 h-5 relative">
-                    <Trash />
-                </div>
-                <div class="text-center text-rose-500 text-sm font-normal font-['Open Sans'] leading-tight">Xóa</div>
-            </button>
+        <div class="mt-4 overflow-y-scroll w-full max-h-full">
+            {imageUrl.map((item, index) => {
+                return (
+                    <div className="relative image-container" key={index}>
+                        <img src={item.url} alt="avatar" className="w-full max-h-full object-contain" />
+                        <div className="absolute top-2 right-2 p-1 bg-white rounded-[5px] flex items-center">
+                            <button className="flex items-center gap-1" onClick={() => removeImage(index)}>
+                                <div className="w-5 h-5 relative">
+                                    <Trash />
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                );
+            })}
         </div>
         </>
         :
@@ -139,7 +185,7 @@ function NonImgUI({ onStateChange }) {
                     <FileImage />
                 </p>
                 <p className="ant-upload-text">Tải lên file ảnh hoặc kéo thả</p>
-                <p className="ant-upload-hint">Định dạng hỗ trợ: jpg, png...</p>
+                <p className="ant-upload-hint">Định dạng hỗ trợ: jpg, png, pdf...</p>
             </Dragger>
         </div>
         <div class="self-stretch h-[172px] p-4 bg-white rounded-xl border border-zinc-300 flex-col justify-center items-center gap-4 flex mt-6">

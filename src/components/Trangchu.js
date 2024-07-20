@@ -12,12 +12,15 @@ function Trangchu() {
     const [resultText, setResultText] = React.useState("Kết quả chuyển đổi");
     const [colorText, setColorText] = React.useState("text-zinc-400");
     const [languageEnglish, setLanguageEnglish] = React.useState(true);
+    const [flag_record, setFlagRecord] = React.useState(false);
 
     const handleAudioUpload = (audioFile) => {
         setAudio(audioFile);
+        setFlagRecord(true);
     }
 
     const handleImgUpload = (newState) => {
+        console.log("newState: ", newState);
         setImg(newState);
     }
 
@@ -31,7 +34,7 @@ function Trangchu() {
           label: 'Chuyển đổi từ giọng nói',
           children:
             <div class="self-stretch h-[383px] flex-col justify-start items-start gap-4 flex">
-                {audio ? <HaveAudioUI state={audio} setState={setAudio} /> : <NonFileUI onStateChange={handleAudioUpload} />}
+                {audio ? <HaveAudioUI state={audio} setState={setAudio} /> : <NonFileUI onStateChange={handleAudioUpload} flag_record={flag_record} />}
             </div>,
         },
         {
@@ -82,12 +85,22 @@ function Trangchu() {
                 }
             );  
         } else if (img && curTab === "2") {
+
+            const body = { names: [...new Set(img.map(item => item.name))] };
+
             fetch("http://localhost:8000/convertImg", {
-                method: "GET",
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+                
             }).then((response) => {
                 return response.json();
             }).then((data) => {
-                setResultText(data.text);
+                const results = data.results;
+                const resultText = Object.values(results).join("\n\n");
+                setResultText(resultText);
 
                 // Change color of text to black
                 setColorText("text-black");
@@ -132,7 +145,7 @@ function Trangchu() {
                             <div class={`text-lg font-semibold font-['Open Sans'] leading-7 text-zinc-800`}>Kết quả chuyển đổi</div>
                         </div>
                         <div class="self-stretch grow shrink basis-0 p-4 flex-col justify-start items-start gap-2 flex">
-                            <div class="self-stretch grow shrink basis-0 pl-4 pr-1 pt-3 pb-1 bg-white rounded border border-zinc-300 flex-col justify-between items-end flex">
+                            <div class="self-stretch grow shrink basis-0 pl-4 pr-1 pt-3 pb-1 bg-white rounded border border-zinc-300 flex-col justify-between items-end flex overflow-y-auto">
                                 <div class={`self-stretch ${colorText} text-sm font-normal font-['Open Sans'] leading-tight`}>
                                     <p dangerouslySetInnerHTML={{__html: resultText.replace(/\n/g, "<br />")}}></p>
                                 </div>

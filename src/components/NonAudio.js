@@ -6,12 +6,12 @@ import { ReactComponent as Microphone } from "../resources/Microphone.svg";
 import { MediaRecorder, register } from 'extendable-media-recorder';
 import { connect } from 'extendable-media-recorder-wav-encoder';
 
-function NonFileUI({ onStateChange }) {
+function NonFileUI({ onStateChange , flag_record}) {
     const [record, setRecord] = React.useState(false);
     const [recordUI, setRecordUI] = React.useState(false);
     const [recordTime, setRecordTime] = React.useState(0);
     const [isPaused, setIsPaused] = React.useState(false);
-
+    
     const fileInputRef = React.useRef(null);
     const mediaRecorderRef = React.useRef(null);
     const isPausedRef = React.useRef(isPaused);
@@ -42,14 +42,11 @@ function NonFileUI({ onStateChange }) {
         fileInputRef.current.click();
     };
 
-    // eslint-disable-next-line no-unused-vars
-    const register_init = async () => {
-        await register(await connect());
-    }
-
     React.useEffect(() => {
         const startRecording = async () => {
-            // await register(await connect());
+            if (flag_record === false) {
+                await register(await connect());
+            }
 
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' });
@@ -97,7 +94,7 @@ function NonFileUI({ onStateChange }) {
                 mediaRecorderRef.current.stop();
             }
         };
-      }, [record, onStateChange]);
+      }, [flag_record, onStateChange, record]);
 
     const toggleRecord = () => {
         setRecord(!record);
