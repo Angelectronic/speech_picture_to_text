@@ -99,7 +99,7 @@ function Trangchu() {
                 return response.json();
             }).then((data) => {
                 const results = data.results;
-                const resultText = Object.values(results).join("\n\n");
+                const resultText = results ? Object.values(results).join("\n\n") : "";
                 setResultText(resultText);
 
                 // Change color of text to black
