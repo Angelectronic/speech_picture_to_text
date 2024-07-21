@@ -137,7 +137,7 @@ function NonImgUI({ onStateChange }) {
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
-        multiple: true
+        multiple: false
     };
 
     const removeImage = (index) => {
@@ -160,6 +160,12 @@ function NonImgUI({ onStateChange }) {
         { 
         imageUrl ?
         <>
+        <div class="self-stretch py-3 bg-white border-b border-zinc-300 justify-end items-center gap-12 inline-flex">
+            <button class="rounded justify-center items-center gap-2 flex" onClick={() => { setImageUrl(null); onStateChange(null); }}>
+                <div class="w-5 h-5 relative"><Trash /></div>
+                <div class="text-center text-rose-500 text-sm font-medium font-['Open Sans'] leading-tight">Xóa tất cả</div>
+            </button>
+        </div>
         <div class="mt-4 overflow-y-scroll w-full max-h-full">
             {imageUrl.map((item, index) => {
                 return (
