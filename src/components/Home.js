@@ -2,12 +2,20 @@ import React from "react"
 import Trangchu from "./Trangchu"
 import LichSu from "./LichSu"
 import CauHinh from "./CauHinh"
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const username = localStorage.getItem('username')
 
   const [mainContent, setMainContent] = React.useState(<Trangchu />)
   const [loggedIn, setLoggedIn] = React.useState(username ? true : false)
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!loggedIn) {
+      navigate('/login')
+    }
+  }, [loggedIn, navigate])
 
   var TrangChuRef = React.createRef()
   var LichSuRef = React.createRef()

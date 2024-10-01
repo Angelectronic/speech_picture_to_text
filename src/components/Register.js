@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -7,6 +8,7 @@ function Register() {
 
   var email = React.createRef();
   var password = React.createRef();
+  const navigate = useNavigate();
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -32,20 +34,21 @@ function Register() {
       "username": email.current.value,
       "password": password.current.value
     }
-    fetch('https://restful-booker.herokuapp.com/auth', {
+    fetch('http://localhost:8000/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        // 'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(body),
-      mode: 'no-cors'
+      // mode: 'no-cors'
     }).then(response => {
       console.log(response);
       if(response.status === 200) {
-        alert('Login success');
+        alert('Register success');
+        navigate('/login');
       } else {
-        alert('Login failed');
+        alert(response.message);
       }
     }).catch(error => {
       console.error('Error:', error);
